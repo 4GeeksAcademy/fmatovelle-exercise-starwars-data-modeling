@@ -9,12 +9,6 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-# Definir el Enum para el campo 'type' en la clase 'Media'
-# class MediaType(enum.Enum):  # Definimos un Enum con los valores posibles para 'type'
-#     IMAGE = "image"
-#     VIDEO = "video"
-#     AUDIO = "audio"
-
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -28,9 +22,6 @@ class User(Base):
     vehicle = relationship('Vehicle', backref='user', lazy=True)
     planet = relationship('Planet', backref='user', lazy=True)
     favorite = relationship('Favorite', backref='user', lazy=True)
-    # comments = relationship('Comment', backref='user', lazy=True)
-    # followers = relationship('Follower', foreign_keys='Follower.user_to_id', backref='followed', lazy=True)
-    # following = relationship('Follower', foreign_keys='Follower.user_from_id', backref='follower', lazy=True)
 
 class Person(Base):
     __tablename__ = 'person'
@@ -42,10 +33,6 @@ class Person(Base):
     skin_color = Column(String(250), nullable=False)
     eye_color = Column(String(250), nullable=False)
 
-
-
-    # type = Column(Enum(MediaType), nullable=False)  # Usando el Enum definido
-    # url = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)  # Agregamos la relación ForeignKey
 
 class Vehicle(Base):
@@ -59,7 +46,6 @@ class Vehicle(Base):
     cargo_capacity  = Column(Integer, nullable=False)
 
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    # post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
 
 class Planet(Base):
     __tablename__ = 'planet'
@@ -72,19 +58,14 @@ class Planet(Base):
     diameter = Column(Integer, nullable=False)
     
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    
-    # media = relationship('Media', backref='post', lazy=True)
-    # comments = relationship('Comment', backref='post', lazy=True)
 
 
 class Favorite(Base):
     __tablename__ = 'favorite'
-    user_save_person = Column(Integer, ForeignKey('person.id'), primary_key=True)
-    user_save_vehicle = Column(Integer, ForeignKey('vehicle.id'), primary_key=True)
-    user_save_planet = Column(Integer, ForeignKey('planet.id'), primary_key=True)
+    user_save_person = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    user_save_vehicle = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    user_save_planet = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
-    # user_from_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    # user_to_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
 ## Draw from SQLAlchemy base
 try:
