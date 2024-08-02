@@ -9,6 +9,8 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
+
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -17,11 +19,11 @@ class User(Base):
     last_name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False, unique=True)
     password = Column(String(250), nullable=False, unique=True)
+
+    person_favorite = relationship('Person_favorite', backref='user', lazy=True)
+    planet_favorite = relationship('Planet_favorite', backref='user', lazy=True)
+    vehicle_favorite = relationship('Vehicle_favorite', backref='user', lazy=True)
     
-    person = relationship('Person', backref='user', lazy=True)
-    vehicle = relationship('Vehicle', backref='user', lazy=True)
-    planet = relationship('Planet', backref='user', lazy=True)
-    favorite = relationship('Favorite', backref='user', lazy=True)
 
 class Person(Base):
     __tablename__ = 'person'
@@ -33,7 +35,8 @@ class Person(Base):
     skin_color = Column(String(250), nullable=False)
     eye_color = Column(String(250), nullable=False)
 
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)  # Agregamos la relación ForeignKey
+    person_favorite = relationship('Person_favorite', backref='person', lazy=True)
+
 
 class Vehicle(Base):
     __tablename__ = 'vehicle'
@@ -45,7 +48,7 @@ class Vehicle(Base):
     max_atmosphering_speed = Column(Integer, nullable=False)
     cargo_capacity  = Column(Integer, nullable=False)
 
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    vehicle_favorite = relationship('Vehicle_favorite', backref='user', lazy=True)
 
 class Planet(Base):
     __tablename__ = 'planet'
@@ -57,14 +60,32 @@ class Planet(Base):
     rotaion_period = Column(Integer, nullable=False)
     diameter = Column(Integer, nullable=False)
     
+    planet_favorite = relationship('Planet_favorite', backref='planet', lazy=True)
+
+
+class Person_favorite(Base):
+    __tablename__ = 'person_favorite'
+    id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    person_id = Column(Integer, ForeignKey('person.id'), nullable=False)
+
+class Planet_favorite(Base):
+    __tablename__ = 'planet_favorite'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    planet_id = Column(Integer, ForeignKey('planet.id'), nullable=False)
+
+class Vehicle_favorite(Base):
+    __tablename__ = 'vehicle_favorite'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    vehicle_id = Column(Integer, ForeignKey('vehicle.id'), nullable=False)
+    
 
 
-class Favorite(Base):
-    __tablename__ = 'favorite'
-    user_save_person = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    user_save_vehicle = Column(Integer, ForeignKey('user.id'), primary_key=True)
-    user_save_planet = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    # user_save_person = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    # user_save_vehicle = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    # user_save_planet = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
 
 ## Draw from SQLAlchemy base
